@@ -45,54 +45,47 @@ const REGULAR_USER_ADDRESS = "5EBxoSssqNo23FvsDeUxjyQScnfEiGxJaNwuwqBH2Twe35BX";
 describe("PolkadotAuthorityService", () => {
 
     it("succeeds with legal officer", async () => {
-        const polkadotService = mockPolkadotServiceWithLegalOfficer(HOSTS, [], {});
+        const polkadotService = mockPolkadotServiceWithLegalOfficer(HOSTS, {});
         const authorityService = new PolkadotAuthorityService(polkadotService, PeerId.createFromB58String(NODE1));
         expect(await authorityService.isLegalOfficer(ALICE)).toBe(true);
     })
 
     it("fails for a non-legal officer", async () => {
-        const polkadotService = mockPolkadotServiceWithLegalOfficer(HOSTS, [], {});
+        const polkadotService = mockPolkadotServiceWithLegalOfficer(HOSTS, {});
         const authorityService = new PolkadotAuthorityService(polkadotService, PeerId.createFromB58String(NODE1));
         expect(await authorityService.isLegalOfficer(REGULAR_USER_ADDRESS)).toBe(false);
     })
 
     it("detects a legal officer node", async () => {
         const peerId = PeerId.createFromB58String(NODE1);
-        const polkadotService = mockPolkadotServiceWithLegalOfficer(HOSTS, [], {});
+        const polkadotService = mockPolkadotServiceWithLegalOfficer(HOSTS, {});
         const authorityService = new PolkadotAuthorityService(polkadotService, PeerId.createFromB58String(NODE1));
         expect(await authorityService.isLegalOfficerNode(peerId)).toBeTrue();
     })
 
     it("does not detect any peer id as legal officer node", async () => {
         const peerId = PeerId.createFromB58String(ANY_NODE);
-        const polkadotService = mockPolkadotServiceWithLegalOfficer(HOSTS, [], {});
+        const polkadotService = mockPolkadotServiceWithLegalOfficer(HOSTS, {});
         const authorityService = new PolkadotAuthorityService(polkadotService, PeerId.createFromB58String(NODE1));
         expect(await authorityService.isLegalOfficerNode(peerId)).toBeFalse()
     })
 
-    it("detects a well-known node", async () => {
-        const peerId = PeerId.createFromB58String(NODE1);
-        const polkadotService = mockPolkadotServiceWithLegalOfficer({}, Object.values(HOSTS), {});
-        const authorityService = new PolkadotAuthorityService(polkadotService, PeerId.createFromB58String(NODE1));
-        expect(await authorityService.isLegalOfficerNode(peerId)).toBeTrue();
-    })
-
     it("detects a host legal officer of given node", async () => {
         const peerId = PeerId.createFromB58String(NODE1);
-        const polkadotService = mockPolkadotServiceWithLegalOfficer(HOSTS, [], {});
+        const polkadotService = mockPolkadotServiceWithLegalOfficer(HOSTS, {});
         const authorityService = new PolkadotAuthorityService(polkadotService, peerId);
         expect(await authorityService.isLegalOfficerOnNode(ALICE)).toBeTrue();
     })
 
     it("detects a guest legal officer of given node", async () => {
         const peerId = PeerId.createFromB58String(NODE1);
-        const polkadotService = mockPolkadotServiceWithLegalOfficer(HOSTS, [], GUESTS);
+        const polkadotService = mockPolkadotServiceWithLegalOfficer(HOSTS, GUESTS);
         const authorityService = new PolkadotAuthorityService(polkadotService, peerId);
         expect(await authorityService.isLegalOfficerOnNode(CHARLIE)).toBeTrue();
     })
 })
 
-function mockPolkadotServiceWithLegalOfficer(hosts: Record<string, string>, wellKnownNodes: string[], guests: Record<string, string>): LogionNodeApiClass {
+function mockPolkadotServiceWithLegalOfficer(hosts: Record<string, string>, guests: Record<string, string>): LogionNodeApiClass {
     const apiMock = {
         query: {
             loAuthorityList: {
@@ -100,9 +93,6 @@ function mockPolkadotServiceWithLegalOfficer(hosts: Record<string, string>, well
                     address.toString() in hosts ? mockOption(mockHost(hosts[address.toString()])) :
                         address.toString() in guests ? mockOption(mockGuest(guests[address.toString()])) : mockOption(),
                 legalOfficerNodes: () => new Set<OpaquePeerId>(Object.values(hosts).map(toOpaquePeerId)),
-            },
-            nodeAuthorization: {
-                wellKnownNodes: () => new Set<OpaquePeerId>(wellKnownNodes.map(toOpaquePeerId)),
             },
         }
     } as unknown as ApiPromise;

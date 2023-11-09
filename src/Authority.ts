@@ -49,8 +49,7 @@ export class PolkadotAuthorityService implements AuthorityService {
     async isLegalOfficerNode(peerId: PeerId): Promise<boolean> {
         const hexPeerId = this.toHex(peerId);
         const legalOfficerNodes = await this.api.polkadot.query.loAuthorityList.legalOfficerNodes();
-        const wellKnowNodes = await this.api.polkadot.query.nodeAuthorization.wellKnownNodes();
-        return this.isInSet(hexPeerId, legalOfficerNodes) || this.isInSet(hexPeerId, wellKnowNodes);
+        return this.isInSet(hexPeerId, legalOfficerNodes);
     }
 
     private isInSet(hexPeerId: string, set: Set<OpaquePeerId>): boolean {
