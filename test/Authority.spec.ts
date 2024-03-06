@@ -1,28 +1,13 @@
 import { Mock } from "moq.ts";
 import { ApiPromise } from "@polkadot/api";
-import { Bytes, Enum, Option, Struct } from "@polkadot/types-codec";
+import { Option } from "@polkadot/types-codec";
 import { Codec } from "@polkadot/types-codec/types";
-import type { AccountId32 } from '@polkadot/types/interfaces/runtime';
+import { PalletLoAuthorityListLegalOfficerData, PalletLoAuthorityListHostData, PalletLoAuthorityListGuestData } from '@polkadot/types/lookup';
 import PeerId, { createFromB58String } from "peer-id";
 import { AccountId, OpaquePeerId } from "@logion/node-api/dist/types/interfaces";
 
 import { PolkadotAuthorityService } from "../src/index.js";
 import { LogionNodeApiClass } from "@logion/node-api";
-
-// Below definitions must be removed once @logion/node-api is switched to ES module packaging
-interface PalletLoAuthorityListLegalOfficerData extends Enum {
-    readonly isHost: boolean;
-    readonly asHost: PalletLoAuthorityListHostData;
-    readonly isGuest: boolean;
-    readonly asGuest: AccountId32;
-    readonly type: 'Host' | 'Guest';
-}
-
-interface PalletLoAuthorityListHostData extends Struct {
-    readonly nodeId: Option<OpaquePeerId>;
-    readonly baseUrl: Option<Bytes>;
-}
-// Above definitions must be removed once @logion/node-api is switched to ES module packaging
 
 const ALICE = "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY";
 const NODE1 = "12D3KooWBmAwcd4PJNJvfV89HwE48nwkRmAgo8Vy3uQEyNNHBox2";
@@ -114,9 +99,11 @@ function mockGuest(address: string): PalletLoAuthorityListLegalOfficerData {
         isHost: false,
         isGuest: true,
         asGuest: {
-            toHuman: () => address,
-            toString: () => address,
-        } as AccountId,
+            hostId: {
+                toHuman: () => address,
+                toString: () => address,
+            }
+        } as PalletLoAuthorityListGuestData,
     } as unknown as PalletLoAuthorityListLegalOfficerData;
 }
 
