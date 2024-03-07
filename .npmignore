@@ -1,6 +1,7 @@
 /test/**
 /integration/**
 /src/**
+/scripts/**
 docker-compose.yml
 jasmine*.json
 tsconfig*.json
