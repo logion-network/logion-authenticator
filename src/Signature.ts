@@ -3,7 +3,7 @@ import { stringToHex } from "@polkadot/util";
 import { signatureVerify } from "@polkadot/util-crypto";
 import { waitReady } from "@polkadot/wasm-crypto";
 import crypto from 'crypto';
-import web3Util from "web3-utils";
+import { sha3 } from "web3-utils";
 import { ethers } from "ethers";
 import { SignableMessage } from "@multiversx/sdk-core";
 import { UserVerifier } from "@multiversx/sdk-wallet";
@@ -97,7 +97,7 @@ export class EthereumSignatureService extends SignatureService {
         const { message, signature, address } = params;
         // sha3 must be applied when using Polkadot extension MetaMask compatibility layer
         // @see https://github.com/polkadot-js/extension/blob/master/packages/extension-compat-metamask/src/bundle.ts#L80
-        const digest = web3Util.sha3(stringToHex(message));
+        const digest = sha3(stringToHex(message));
         if(digest) {
             const recoveredAddress = recoverAddress(digest, signature);
             return Promise.resolve(recoveredAddress.toLowerCase() === address.toLowerCase());
@@ -127,7 +127,7 @@ export class CrossmintSignatureService extends SignatureService {
         const { message, signature, address } = params;
 
         const hexMessage = stringToHex(message);
-        const digest = ethers.utils.hashMessage(hexMessage);
+        const digest = ethers.hashMessage(hexMessage);
         const recoveredAddress = recoverAddress(digest, signature);
         return Promise.resolve(recoveredAddress.toLowerCase() === address.toLowerCase());
     }
