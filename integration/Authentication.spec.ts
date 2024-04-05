@@ -1,4 +1,4 @@
-import { buildApiClass, ValidAccountId } from "@logion/node-api";
+import { LogionNodeApiClass, ValidAccountId } from "@logion/node-api";
 import { KeyringSigner, RawSigner, toIsoString } from "@logion/client";
 import { Keyring } from "@polkadot/api";
 import { DateTime, Duration } from "luxon";
@@ -9,7 +9,7 @@ import { AuthenticatedUser, Authenticator, defaultSetup, SessionManager, Session
 describe("Authentication", () => {
 
     it("authenticates properly with logion node", async () => {
-        const api = await buildApiClass("ws://127.0.0.1:9944");
+        const api = await LogionNodeApiClass.connect("ws://127.0.0.1:9944");
         const signer = buildSigner();
 
         const alice = api.queries.getValidAccountId("5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY", "Polkadot");

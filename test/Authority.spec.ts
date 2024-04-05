@@ -79,7 +79,11 @@ function mockPolkadotServiceWithLegalOfficer(hosts: Record<string, string>, gues
                         address.toString() in guests ? mockOption(mockGuest(guests[address.toString()])) : mockOption(),
                 legalOfficerNodes: () => new Set<OpaquePeerId>(Object.values(hosts).map(toOpaquePeerId)),
             },
-        }
+        },
+        runtimeVersion: {
+            specName: { toString: () => "logion" },
+            specVersion: { toBigInt: () => 3000n },
+        },
     } as unknown as ApiPromise;
     return new LogionNodeApiClass(apiMock);
 }
