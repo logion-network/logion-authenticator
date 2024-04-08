@@ -1,17 +1,10 @@
 import { AuthorityService, ErrorFactory } from "./Config.js";
-import { AccountType } from "@logion/node-api";
+import { AccountId, ValidAccountId, AccountType, AnyAccountId } from "@logion/node-api";
 
-export type AddressType = AccountType;
-
-export interface Address {
-    readonly type: AddressType;
-    readonly address: string;
-}
-
-export class AuthenticatedUser implements Address {
+export class AuthenticatedUser implements AccountId {
 
     constructor(
-        address: Address,
+        address: AccountId,
         nodeOwner: string,
         authorityService: AuthorityService,
         errorFactory: ErrorFactory,
@@ -59,8 +52,12 @@ export class AuthenticatedUser implements Address {
         return addresses.some(address => this.is(address));
     }
 
+    toValidAccountId(): ValidAccountId {
+        return new AnyAccountId(this.address, this.type).toValidAccountId();
+    }
+
     readonly address: string;
-    readonly type: AddressType;
+    readonly type: AccountType;
     private readonly nodeOwner: string;
     private readonly authorityService: AuthorityService;
     private readonly errorFactory: ErrorFactory;

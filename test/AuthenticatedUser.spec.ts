@@ -1,8 +1,9 @@
 import { It, Mock } from "moq.ts";
-import { AuthenticatedUser, AuthorityService, AddressType } from "../src/index.js";
+import { AuthenticatedUser, AuthorityService } from "../src/index.js";
+import { AccountType } from "@logion/node-api";
 
-const ALICE = "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY";
-const USER_POLKADOT_ADDRESS = "5H4MvAsobfZ6bBCDyj5dsrWYLrA8HrRzaqa9p61UXtxMhSCY"
+const ALICE = "vQx5kESPn8dWyX4KxMCKqUyCaWUwtui1isX6PVNcZh2Ghjitr";
+const USER_POLKADOT_ADDRESS = "vQxHAE33LeJYV69GCB4o4YcCgnDu8y99u5hy2751fRdxjX9kz"
 const USER_ETHEREUM_ADDRESS = "0x590E9c11b1c2f20210b9b84dc2417B4A7955d4e6"
 
 describe('AuthenticatedUser', () => {
@@ -67,12 +68,31 @@ describe('AuthenticatedUser', () => {
         expect(authenticatedUser.type).toBe("Ethereum");
 
     })
+
+    it("builds valid Account ID for Ethereum address", async () => {
+        const authenticatedUser = buildAuthenticatedUser({
+            address: USER_ETHEREUM_ADDRESS,
+            isWellKnownNode: true,
+            addressType: "Ethereum"
+        });
+        expect(authenticatedUser.toValidAccountId().type).toEqual("Ethereum");
+        expect(authenticatedUser.toValidAccountId().address).toEqual(USER_ETHEREUM_ADDRESS);
+    })
+
+    it("builds valid Account ID for Polkadot address", async () => {
+        const authenticatedUser = buildAuthenticatedUser({
+            address: USER_POLKADOT_ADDRESS,
+            isWellKnownNode: true,
+        });
+        expect(authenticatedUser.toValidAccountId().type).toEqual("Polkadot");
+        expect(authenticatedUser.toValidAccountId().address).toEqual(USER_POLKADOT_ADDRESS);
+    })
 })
 
 function buildAuthenticatedUser(args: {
     address: string,
     isWellKnownNode?: boolean,
-    addressType?: AddressType,
+    addressType?: AccountType,
 }): AuthenticatedUser {
     const { address, isWellKnownNode, addressType } = args;
     return new AuthenticatedUser(
