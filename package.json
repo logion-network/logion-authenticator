@@ -1,6 +1,6 @@
 {
   "name": "@logion/authenticator",
-  "version": "0.5.6-1",
+  "version": "0.5.6-2",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/logion-network/logion-authenticator.git"
@@ -35,8 +35,8 @@
   },
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "^1.0.2",
-    "@logion/client": "^0.42.1-1",
-    "@logion/node-api": "^0.29.0-1",
+    "@logion/client": "^0.42.1-2",
+    "@logion/node-api": "^0.29.0-2",
     "@tsconfig/node16": "^1.0.3",
     "@types/jasmine": "^4.0.3",
     "@types/luxon": "^3.4.2",

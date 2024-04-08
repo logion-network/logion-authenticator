@@ -566,8 +566,8 @@ __metadata:
   dependencies:
     "@ethersproject/transactions": ^5.7.0
     "@istanbuljs/nyc-config-typescript": ^1.0.2
-    "@logion/client": ^0.42.1-1
-    "@logion/node-api": ^0.29.0-1
+    "@logion/client": ^0.42.1-2
+    "@logion/node-api": ^0.29.0-2
     "@multiversx/sdk-core": ^12.19.1
     "@multiversx/sdk-wallet": ^4.3.0
     "@tsconfig/node16": ^1.0.3
@@ -595,21 +595,21 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@logion/client@npm:^0.42.1-1":
-  version: 0.42.1-1
-  resolution: "@logion/client@npm:0.42.1-1"
+"@logion/client@npm:^0.42.1-2":
+  version: 0.42.1-2
+  resolution: "@logion/client@npm:0.42.1-2"
   dependencies:
-    "@logion/node-api": ^0.29.0-1
+    "@logion/node-api": ^0.29.0-2
     axios: ^1.6.7
     luxon: ^3.4.4
     mime-db: ^1.52.0
-  checksum: 3158b7e70ebce660ef42926e435f48a180cfa9ed39623423983728d72af4f8bd405103e8997c2eb9522564d4197e7b17dfdca48a81e21c902c7e1254b4e75cac
+  checksum: f20b357002073d8e7c87f87a364eb39b995ea63cd0515f43e440ea6c6a42a20dd7ce5f834796ab7f36a9bb0772707f951a912b65d6e9c2370fbe893684bb9d6c
   languageName: node
   linkType: hard
 
-"@logion/node-api@npm:^0.29.0-1":
-  version: 0.29.0-1
-  resolution: "@logion/node-api@npm:0.29.0-1"
+"@logion/node-api@npm:^0.29.0-2":
+  version: 0.29.0-2
+  resolution: "@logion/node-api@npm:0.29.0-2"
   dependencies:
     "@polkadot/api": ^10.12.2
     "@polkadot/util": ^12.6.2
@@ -617,7 +617,7 @@ __metadata:
     "@types/uuid": ^9.0.2
     fast-sha256: ^1.3.0
     uuid: ^9.0.0
-  checksum: 6cc936d1866fef7cf05029ef9ebf097c836c9754587b5e528269d737007aefff577419c2f24f474f4ae40f283b7d2308907596649ca40bb022afeb3cca26051c
+  checksum: 0e09ab749c4e46f0e3929fafb10e9da14ced797df929ef2f799ee3a34ad3a7214164a7698c54705ab87b4a76e0b6f79442ba198a1728e4ae5bb7c02fd1118217
   languageName: node
   linkType: hard
 
