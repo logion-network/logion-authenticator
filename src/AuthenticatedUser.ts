@@ -28,10 +28,10 @@ export class AuthenticatedUser implements AccountId {
         return this.isPolkadot() && await this.authorityService.isLegalOfficer(this.address);
     }
 
-    is(address: string | undefined | null): boolean {
-        return address !== undefined
-            && address !== null
-            && address === this.address;
+    is(validAccountId: ValidAccountId | undefined | null): boolean {
+        return validAccountId !== undefined
+            && validAccountId !== null
+            && validAccountId.equals(this.toValidAccountId())
     }
 
     require(predicate: (check: AuthenticatedUser) => boolean, message?: string): AuthenticatedUser {
@@ -48,7 +48,7 @@ export class AuthenticatedUser implements AccountId {
         return this;
     }
 
-    isOneOf(addresses: (string | undefined | null)[]): boolean {
+    isOneOf(addresses: (ValidAccountId | undefined | null)[]): boolean {
         return addresses.some(address => this.is(address));
     }
 
