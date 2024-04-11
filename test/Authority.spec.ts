@@ -7,25 +7,25 @@ import PeerId, { createFromB58String } from "peer-id";
 import { AccountId, OpaquePeerId } from "@logion/node-api/dist/types/interfaces";
 
 import { PolkadotAuthorityService } from "../src/index.js";
-import { LogionNodeApiClass } from "@logion/node-api";
+import { LogionNodeApiClass, ValidAccountId } from "@logion/node-api";
 
-const ALICE = "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY";
+const ALICE = ValidAccountId.polkadot("5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY");
 const NODE1 = "12D3KooWBmAwcd4PJNJvfV89HwE48nwkRmAgo8Vy3uQEyNNHBox2";
-const BOB = "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty";
+const BOB = ValidAccountId.polkadot("5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty");
 const NODE2 = "12D3KooWQYV9dGMFoRzNStwpXztXaBUjtPqi6aU76ZgUriHhKust";
 const ANY_NODE = "12D3KooWDCuGU7WY3VaWjBS1E44x4EnmTgK3HRxWFqYG3dqXDfP1";
-const CHARLIE = "5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y";
+const CHARLIE = ValidAccountId.polkadot("5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y");
 
 const HOSTS: Record<string, string> = {
-    [ALICE]: NODE1,
-    [BOB]: NODE2,
+    [ALICE.address]: NODE1,
+    [BOB.address]: NODE2,
 };
 
 const GUESTS: Record<string, string> = {
-    [CHARLIE]: ALICE,
+    [CHARLIE.address]: ALICE.address,
 }
 
-const REGULAR_USER_ADDRESS = "5EBxoSssqNo23FvsDeUxjyQScnfEiGxJaNwuwqBH2Twe35BX";
+const REGULAR_USER = ValidAccountId.polkadot("5EBxoSssqNo23FvsDeUxjyQScnfEiGxJaNwuwqBH2Twe35BX");
 
 describe("PolkadotAuthorityService", () => {
 
@@ -38,7 +38,7 @@ describe("PolkadotAuthorityService", () => {
     it("fails for a non-legal officer", async () => {
         const polkadotService = mockPolkadotServiceWithLegalOfficer(HOSTS, {});
         const authorityService = new PolkadotAuthorityService(polkadotService, PeerId.createFromB58String(NODE1));
-        expect(await authorityService.isLegalOfficer(REGULAR_USER_ADDRESS)).toBe(false);
+        expect(await authorityService.isLegalOfficer(REGULAR_USER)).toBe(false);
     })
 
     it("detects a legal officer node", async () => {

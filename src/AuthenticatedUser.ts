@@ -1,16 +1,16 @@
 import { AuthorityService, ErrorFactory } from "./Config.js";
-import { AccountId, ValidAccountId, AccountType, AnyAccountId } from "@logion/node-api";
+import { ValidAccountId, AnyAccountId, AccountId } from "@logion/node-api";
+import { AccountType } from "@logion/node-api/dist/types/Types";
 
 export class AuthenticatedUser implements AccountId {
 
     constructor(
-        address: AccountId,
-        nodeOwner: string,
+        accountId: AccountId,
+        nodeOwner: ValidAccountId,
         authorityService: AuthorityService,
         errorFactory: ErrorFactory,
     ) {
-        this.type = address.type;
-        this.address = address.address;
+        this.validAccountId = new AnyAccountId(accountId.address, accountId.type).toValidAccountId();
         this.nodeOwner = nodeOwner;
         this.authorityService = authorityService;
         this.errorFactory = errorFactory;
@@ -21,17 +21,15 @@ export class AuthenticatedUser implements AccountId {
     }
 
     isNodeOwner(): boolean {
-        return this.isPolkadot() && this.nodeOwner === this.address;
+        return this.isPolkadot() && this.nodeOwner.equals(this);
     }
 
     async isLegalOfficer(): Promise<boolean> {
-        return this.isPolkadot() && await this.authorityService.isLegalOfficer(this.address);
+        return this.isPolkadot() && await this.authorityService.isLegalOfficer(this.validAccountId);
     }
 
     is(validAccountId: ValidAccountId | undefined | null): boolean {
-        return validAccountId !== undefined
-            && validAccountId !== null
-            && validAccountId.equals(this.toValidAccountId())
+        return this.validAccountId.equals(validAccountId);
     }
 
     require(predicate: (check: AuthenticatedUser) => boolean, message?: string): AuthenticatedUser {
@@ -42,23 +40,26 @@ export class AuthenticatedUser implements AccountId {
     }
 
     async requireLegalOfficerOnNode(message?: string): Promise<AuthenticatedUser> {
-        if (! (this.isPolkadot() && await this.authorityService.isLegalOfficerOnNode(this.address))) {
+        if (! (this.isPolkadot() && await this.authorityService.isLegalOfficerOnNode(this.validAccountId))) {
             throw this.errorFactory.unauthorized(message || "Authenticated User is not Legal Officer on this node.");
         }
         return this;
     }
 
-    isOneOf(addresses: (ValidAccountId | undefined | null)[]): boolean {
-        return addresses.some(address => this.is(address));
+    isOneOf(accountIds: (ValidAccountId | undefined | null)[]): boolean {
+        return accountIds.some(accountId => this.is(accountId));
     }
 
-    toValidAccountId(): ValidAccountId {
-        return new AnyAccountId(this.address, this.type).toValidAccountId();
+    get address(): string {
+        return this.validAccountId.address;
     }
 
-    readonly address: string;
-    readonly type: AccountType;
-    private readonly nodeOwner: string;
+    get type(): AccountType {
+        return this.validAccountId.type;
+    }
+
+    readonly validAccountId: ValidAccountId;
+    private readonly nodeOwner: ValidAccountId;
     private readonly authorityService: AuthorityService;
     private readonly errorFactory: ErrorFactory;
 }
