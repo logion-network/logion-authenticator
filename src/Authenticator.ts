@@ -61,9 +61,9 @@ export class Authenticator {
     }
 
     async ensureAuthenticatedUserOrThrow(jwtToken: string): Promise<AuthenticatedUser> {
-        const address = await this.validTokenOrThrow(jwtToken);
+        const account = await this.validTokenOrThrow(jwtToken);
         return new AuthenticatedUser(
-            address,
+            account,
             this.config.nodeOwner,
             this.config.authorityService,
             this.config.errorFactory

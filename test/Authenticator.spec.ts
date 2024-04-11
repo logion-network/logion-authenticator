@@ -3,13 +3,15 @@ import { Mock, It } from "moq.ts";
 import PeerId from "peer-id";
 
 import { Authenticator, AuthenticatorConfig, AuthorityService, defaultErrorFactory, SignedSession } from "../src/index.js";
+import { ValidAccountId } from "@logion/node-api";
 
-const ALICE = "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY";
+const ALICE = ValidAccountId.polkadot("5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY");
 const USER_TOKEN_PAYLOAD = "eyJhbGciOiJFZERTQSJ9.eyJhZGRyZXNzVHlwZSI6IlBvbGthZG90IiwiaWF0IjoxNjMxMjE3NjExLCJleHAiOjQ3ODQ4MTc2MTEsImlzcyI6IjEyRDNLb29XREN1R1U3V1kzVmFXakJTMUU0NHg0RW5tVGdLM0hSeFdGcVlHM2RxWERmUDEiLCJzdWIiOiI1SDRNdkFzb2JmWjZiQkNEeWo1ZHNyV1lMckE4SHJSemFxYTlwNjFVWHR4TWhTQ1kifQ"
 const USER_TOKEN = USER_TOKEN_PAYLOAD + ".WT9c_0PkSoJm5y6PbXKOpphP_RxOBWtCJJnun8QRC34MnYB_HXaOIW9Miee19-L0BV72YDpB0whk2WOvR2XyBg";
 const USER_TOKEN_WRONG_SIGNATURE = USER_TOKEN_PAYLOAD + ".GTLJB_uMjsdcuWzM3CWL92n1UNI0WYXFUDW7QQ1Vi6k3TQIEvG_WwMuuZ2d9cexY";
 const ALICE_TOKEN = "eyJhbGciOiJFZERTQSJ9.eyJhZGRyZXNzVHlwZSI6IlBvbGthZG90IiwiaWF0IjoxNjMxMjE3NjExLCJleHAiOjQ3ODQ4MTc2MTEsImlzcyI6IjEyRDNLb29XREN1R1U3V1kzVmFXakJTMUU0NHg0RW5tVGdLM0hSeFdGcVlHM2RxWERmUDEiLCJzdWIiOiI1R3J3dmFFRjV6WGIyNkZ6OXJjUXBEV1M1N0N0RVJIcE5laFhDUGNOb0hHS3V0UVkifQ.Bp6MrRdlDZqJwPUShc2MLJTsC2vuTFY0XeQtM9sMHthnOq5LwmapMzHz-EUFw225bQsAMHpgA18DrkJMv2AECw"
 const USER_ADDRESS = "5H4MvAsobfZ6bBCDyj5dsrWYLrA8HrRzaqa9p61UXtxMhSCY"
+const USER = ValidAccountId.polkadot(USER_ADDRESS);
 const TTL = 100 * 365 * 24 * 3600; // 100 years
 
 describe('Authenticator', () => {
@@ -32,7 +34,7 @@ describe('Authenticator', () => {
     it('authenticates user based on token', async () => {
         const authenticationService = new Authenticator(buildConfig());
         const logionUser = await authenticationService.ensureAuthenticatedUserOrThrow(USER_TOKEN);
-        expect(logionUser.address).toBe(USER_ADDRESS);
+        expect(logionUser.address).toBe(USER.address);
     })
 
     it('authenticates node owner based on token', async () => {

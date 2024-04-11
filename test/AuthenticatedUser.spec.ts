@@ -2,7 +2,7 @@ import { It, Mock } from "moq.ts";
 import { AuthenticatedUser, AuthorityService } from "../src/index.js";
 import { AccountType, ValidAccountId, AnyAccountId } from "@logion/node-api";
 
-const ALICE = "vQx5kESPn8dWyX4KxMCKqUyCaWUwtui1isX6PVNcZh2Ghjitr";
+const ALICE = ValidAccountId.polkadot("vQx5kESPn8dWyX4KxMCKqUyCaWUwtui1isX6PVNcZh2Ghjitr");
 const USER_POLKADOT_ADDRESS = "vQxHAE33LeJYV69GCB4o4YcCgnDu8y99u5hy2751fRdxjX9kz"
 const USER_ETHEREUM_ADDRESS = "0x590E9c11b1c2f20210b9b84dc2417B4A7955d4e6"
 const SOME_OTHER_USER = "5E4cdkKrh19n75jUrDDrs3RBc1yvt4XqYZux8piEXnsc1Et7";
@@ -52,7 +52,7 @@ describe('AuthenticatedUser', () => {
 
     it('authenticates legal officer based on token', async () => {
         const authenticatedUser = buildAuthenticatedUser({
-            address: ALICE,
+            address: ALICE.address,
             isWellKnownNode: true,
         });
         expect(authenticatedUser.isNodeOwner()).toBe(true);
@@ -76,8 +76,8 @@ describe('AuthenticatedUser', () => {
             isWellKnownNode: true,
             addressType: "Ethereum"
         });
-        expect(authenticatedUser.toValidAccountId().type).toEqual("Ethereum");
-        expect(authenticatedUser.toValidAccountId().address).toEqual(USER_ETHEREUM_ADDRESS);
+        expect(authenticatedUser.validAccountId.type).toEqual("Ethereum");
+        expect(authenticatedUser.validAccountId.address).toEqual(USER_ETHEREUM_ADDRESS);
     })
 
     it("builds valid Account ID for Polkadot address", async () => {
@@ -85,8 +85,8 @@ describe('AuthenticatedUser', () => {
             address: USER_POLKADOT_ADDRESS,
             isWellKnownNode: true,
         });
-        expect(authenticatedUser.toValidAccountId().type).toEqual("Polkadot");
-        expect(authenticatedUser.toValidAccountId().address).toEqual(USER_POLKADOT_ADDRESS);
+        expect(authenticatedUser.validAccountId.type).toEqual("Polkadot");
+        expect(authenticatedUser.validAccountId.address).toEqual(USER_POLKADOT_ADDRESS);
     })
 })
 

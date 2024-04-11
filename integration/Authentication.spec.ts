@@ -18,7 +18,7 @@ describe("Authentication", () => {
         const tokenConfig: TokenConfig = {
             nodePeerId: PeerId.createFromB58String("12D3KooWBmAwcd4PJNJvfV89HwE48nwkRmAgo8Vy3uQEyNNHBox2"),
             nodeKey: Buffer.from("c12b6d18942f5ee8528c8e2baf4e147b5c5c18710926ea492d09cbd9f6c9f82a", "hex"),
-            nodeOwner: alice.address,
+            nodeOwner: alice,
             jwtTimeToLive: Duration.fromObject({ hour: 1 }),
         };
         const { sessionManager, authenticator } = defaultSetup({ api, tokenConfig });

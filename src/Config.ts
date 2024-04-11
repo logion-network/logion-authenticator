@@ -1,4 +1,4 @@
-import { LogionNodeApiClass } from "@logion/node-api";
+import { LogionNodeApiClass, ValidAccountId } from "@logion/node-api";
 import { Duration } from "luxon";
 import PeerId from "peer-id";
 import { Authenticator } from "./Authenticator.js";
@@ -14,7 +14,7 @@ import {
 } from "./Signature.js";
 
 export interface TokenConfig {
-    readonly nodeOwner: string;
+    readonly nodeOwner: ValidAccountId;
     readonly nodePeerId: PeerId;
     readonly nodeKey: Buffer;
     readonly jwtTimeToLive: Duration;
@@ -31,8 +31,8 @@ export interface ErrorFactory {
 
 export interface AuthorityService {
     isLegalOfficerNode(peerId: PeerId): Promise<boolean>;
-    isLegalOfficer(address: string): Promise<boolean>;
-    isLegalOfficerOnNode(address: string): Promise<boolean>;
+    isLegalOfficer(account: ValidAccountId): Promise<boolean>;
+    isLegalOfficerOnNode(account: ValidAccountId): Promise<boolean>;
 }
 
 export function defaultErrorFactory(): ErrorFactory {

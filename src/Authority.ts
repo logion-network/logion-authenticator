@@ -1,4 +1,4 @@
-import { LogionNodeApiClass } from '@logion/node-api';
+import { LogionNodeApiClass, ValidAccountId } from '@logion/node-api';
 import { OpaquePeerId } from "@logion/node-api/dist/types/interfaces";
 import PeerId from 'peer-id';
 
@@ -15,13 +15,19 @@ export class PolkadotAuthorityService implements AuthorityService {
 
     private readonly nodeId: PeerId;
 
-    async isLegalOfficer(address: string): Promise<boolean> {
-        const entry = await this.api.polkadot.query.loAuthorityList.legalOfficerSet(address);
+    async isLegalOfficer(account: ValidAccountId): Promise<boolean> {
+        if (account.type !== "Polkadot") {
+            return false
+        }
+        const entry = await this.api.polkadot.query.loAuthorityList.legalOfficerSet(account.address);
         return entry.isSome;
     }
 
-    async isLegalOfficerOnNode(address: string): Promise<boolean> {
-        const entry = await this.api.polkadot.query.loAuthorityList.legalOfficerSet(address);
+    async isLegalOfficerOnNode(account: ValidAccountId): Promise<boolean> {
+        if (account.type !== "Polkadot") {
+            return false
+        }
+        const entry = await this.api.polkadot.query.loAuthorityList.legalOfficerSet(account.address);
         if(!entry.isSome) {
             return false;
         } else {
