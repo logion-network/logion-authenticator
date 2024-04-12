@@ -6,7 +6,7 @@ export class AuthenticatedUser implements AccountId {
 
     constructor(
         accountId: AccountId,
-        nodeOwner: ValidAccountId,
+        nodeOwner: ValidAccountId | undefined,
         authorityService: AuthorityService,
         errorFactory: ErrorFactory,
     ) {
@@ -21,7 +21,7 @@ export class AuthenticatedUser implements AccountId {
     }
 
     isNodeOwner(): boolean {
-        return this.isPolkadot() && this.nodeOwner.equals(this);
+        return this.isPolkadot() && this.nodeOwner?.equals(this) || false;
     }
 
     async isLegalOfficer(): Promise<boolean> {
@@ -59,7 +59,7 @@ export class AuthenticatedUser implements AccountId {
     }
 
     readonly validAccountId: ValidAccountId;
-    private readonly nodeOwner: ValidAccountId;
+    private readonly nodeOwner?: ValidAccountId;
     private readonly authorityService: AuthorityService;
     private readonly errorFactory: ErrorFactory;
 }

@@ -14,7 +14,7 @@ import {
 } from "./Signature.js";
 
 export interface TokenConfig {
-    readonly nodeOwner: ValidAccountId;
+    readonly nodeOwner?: ValidAccountId;
     readonly nodePeerId: PeerId;
     readonly nodeKey: Buffer;
     readonly jwtTimeToLive: Duration;

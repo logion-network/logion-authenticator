@@ -13,6 +13,7 @@ describe('AuthenticatedUser', () => {
         const authenticatedUser = buildAuthenticatedUser({
             address: USER_POLKADOT_ADDRESS,
             isWellKnownNode: true,
+            nodeOwner: ALICE,
         });
         expect(authenticatedUser.is(newValidAccountId(SOME_OTHER_USER))).toBe(false);
     })
@@ -21,6 +22,7 @@ describe('AuthenticatedUser', () => {
         const authenticatedUser = buildAuthenticatedUser({
             address: USER_POLKADOT_ADDRESS,
             isWellKnownNode: true,
+            nodeOwner: ALICE,
         });
         expect(authenticatedUser.is(null)).toBe(false);
     })
@@ -29,6 +31,7 @@ describe('AuthenticatedUser', () => {
         const authenticatedUser = buildAuthenticatedUser({
             address: USER_POLKADOT_ADDRESS,
             isWellKnownNode: true,
+            nodeOwner: ALICE,
         });
         expect(authenticatedUser.is(undefined)).toBe(false);
     })
@@ -37,6 +40,7 @@ describe('AuthenticatedUser', () => {
         const authenticatedUser = buildAuthenticatedUser({
             address: USER_POLKADOT_ADDRESS,
             isWellKnownNode: true,
+            nodeOwner: ALICE,
         });
         expect(authenticatedUser.isOneOf([ newValidAccountId(SOME_OTHER_USER) ])).toBe(false);
     })
@@ -45,6 +49,7 @@ describe('AuthenticatedUser', () => {
         const authenticatedUser = buildAuthenticatedUser({
             address: USER_POLKADOT_ADDRESS,
             isWellKnownNode: true,
+            nodeOwner: ALICE,
         });
         expect(authenticatedUser.isOneOf([ newValidAccountId(USER_POLKADOT_ADDRESS) ])).toBe(true);
         expect(authenticatedUser.isPolkadot()).toBe(true);
@@ -54,6 +59,7 @@ describe('AuthenticatedUser', () => {
         const authenticatedUser = buildAuthenticatedUser({
             address: ALICE.address,
             isWellKnownNode: true,
+            nodeOwner: ALICE,
         });
         expect(authenticatedUser.isNodeOwner()).toBe(true);
     })
@@ -62,7 +68,8 @@ describe('AuthenticatedUser', () => {
         const authenticatedUser = buildAuthenticatedUser({
             address: USER_ETHEREUM_ADDRESS,
             isWellKnownNode: true,
-            addressType: "Ethereum"
+            addressType: "Ethereum",
+            nodeOwner: ALICE,
         });
         expect(authenticatedUser.isOneOf([ newValidAccountId(USER_ETHEREUM_ADDRESS, "Ethereum") ])).toBe(true);
         expect(authenticatedUser.isPolkadot()).toBe(false);
@@ -74,7 +81,8 @@ describe('AuthenticatedUser', () => {
         const authenticatedUser = buildAuthenticatedUser({
             address: USER_ETHEREUM_ADDRESS,
             isWellKnownNode: true,
-            addressType: "Ethereum"
+            addressType: "Ethereum",
+            nodeOwner: ALICE,
         });
         expect(authenticatedUser.validAccountId.type).toEqual("Ethereum");
         expect(authenticatedUser.validAccountId.address).toEqual(USER_ETHEREUM_ADDRESS);
@@ -84,9 +92,18 @@ describe('AuthenticatedUser', () => {
         const authenticatedUser = buildAuthenticatedUser({
             address: USER_POLKADOT_ADDRESS,
             isWellKnownNode: true,
+            nodeOwner: ALICE,
         });
         expect(authenticatedUser.validAccountId.type).toEqual("Polkadot");
         expect(authenticatedUser.validAccountId.address).toEqual(USER_POLKADOT_ADDRESS);
+    })
+
+    it('handles no node owner', async () => {
+        const authenticatedUser = buildAuthenticatedUser({
+            address: ALICE.address,
+            isWellKnownNode: true,
+        });
+        expect(authenticatedUser.isNodeOwner()).toBe(false);
     })
 })
 
@@ -94,11 +111,12 @@ function buildAuthenticatedUser(args: {
     address: string,
     isWellKnownNode?: boolean,
     addressType?: AccountType,
+    nodeOwner?: ValidAccountId,
 }): AuthenticatedUser {
-    const { address, isWellKnownNode, addressType } = args;
+    const { address, isWellKnownNode, addressType, nodeOwner } = args;
     return new AuthenticatedUser(
         newValidAccountId(address, addressType),
-        ALICE,
+        nodeOwner,
         mockAuthorityService(false, isWellKnownNode),
         {
             unauthorized: (message: string) => new Error(message),
