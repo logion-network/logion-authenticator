@@ -85,7 +85,7 @@ describe('AuthenticatedUser', () => {
             nodeOwner: ALICE,
         });
         expect(authenticatedUser.validAccountId.type).toEqual("Ethereum");
-        expect(authenticatedUser.validAccountId.address).toEqual(USER_ETHEREUM_ADDRESS);
+        expect(authenticatedUser.validAccountId.address).toEqual(USER_ETHEREUM_ADDRESS.toLowerCase());
     })
 
     it("builds valid Account ID for Polkadot address", async () => {

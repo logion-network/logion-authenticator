@@ -84,6 +84,11 @@ function mockPolkadotServiceWithLegalOfficer(hosts: Record<string, string>, gues
             specName: { toString: () => "logion" },
             specVersion: { toBigInt: () => 3000n },
         },
+        consts:{
+            system: {
+                ss58Prefix: ({ toNumber: () => 2021 }),
+            }
+        }
     } as unknown as ApiPromise;
     return new LogionNodeApiClass(apiMock);
 }
