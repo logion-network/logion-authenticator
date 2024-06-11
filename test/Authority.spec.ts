@@ -82,7 +82,7 @@ function mockPolkadotServiceWithLegalOfficer(hosts: Record<string, string>, gues
         },
         runtimeVersion: {
             specName: { toString: () => "logion" },
-            specVersion: { toBigInt: () => 3000n },
+            specVersion: { toBigInt: () => 4000n },
         },
         consts:{
             system: {

@@ -1,6 +1,6 @@
 {
   "name": "@logion/authenticator",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/logion-network/logion-authenticator.git"
@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@ethersproject/transactions": "^5.7.0",
-    "@logion/node-api": "^0.29.0",
+    "@logion/node-api": "^0.31.0",
     "@multiversx/sdk-core": "^12.19.1",
     "@multiversx/sdk-wallet": "^4.3.0",
     "ethers": "^6.11.1",
@@ -36,7 +36,7 @@
   },
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "^1.0.2",
-    "@logion/client": "^0.43.0",
+    "@logion/client": "^0.45.0",
     "@tsconfig/node16": "^1.0.3",
     "@types/jasmine": "^4.0.3",
     "@types/luxon": "^3.4.2",
