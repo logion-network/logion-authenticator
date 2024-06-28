@@ -20,6 +20,13 @@ export interface VerifyParams {
     attributes: any[]; // eslint-disable-line @typescript-eslint/no-explicit-any
 }
 
+export interface VerifyParamsV2 {
+    signature: string;
+    address: string;
+    timestamp: string;
+    sessionId: string;
+}
+
 export interface VerifyFunctionParams {
     signature: string;
     address: string;
@@ -46,9 +53,23 @@ export class SignatureService {
         return sha256(allAttributes);
     }
 
+    buildMessageV2(params: VerifyParamsV2): string {
+        return `logion-auth: ${ params.sessionId } on ${ this.sanitizeDateTime(params.timestamp) }`
+    }
+
     async verify(params: VerifyParams): Promise<boolean> {
         const message = this.buildMessage(params);
 
+        const {
+            address,
+            signature,
+        } = params;
+
+        return this.verifier({ message, signature, address })
+    }
+
+    async verifyV2(params: VerifyParamsV2): Promise<boolean> {
+        const message = this.buildMessageV2(params);
         const {
             address,
             signature,

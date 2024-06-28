@@ -58,6 +58,20 @@ describe('SignatureService', () => {
         expectedMessage: MIXED_ATTRIBUTES_MESSAGE,
         attributes: ["abc", [123, true]],
     }));
+
+    it('verifies with valid input', async () => testVerifyV2({
+        expectedResult: true,
+        expectedMessage: "logion-auth: a24921dc-5c72-4823-a13b-746a5dad0707 on 2021-05-10T00:00",
+        sessionId: "a24921dc-5c72-4823-a13b-746a5dad0707",
+        timestamp: "2021-05-10T00:00",
+    }));
+
+    it('rejects with invalid input', async () => testVerifyV2({
+        expectedResult: false,
+        expectedMessage: "",
+        sessionId: "a24921dc-5c72-4823-a13b-746a5dad0707",
+        timestamp: "2021-05-10T00:00",
+    }));
 });
 
 const MIXED_ATTRIBUTES_MESSAGE = "FtvKwzH/OdYXynVMDeOh6WD77O5gYD8LtDzs5qqDf2U=";
@@ -86,6 +100,33 @@ async function testVerify(params: {
         resource: "resource",
         timestamp: "2021-05-10T00:00",
         attributes: params.attributes
+    })
+
+    expect(result || false).toBe(params.expectedResult);
+}
+
+async function testVerifyV2(params: {
+    expectedResult: boolean;
+    expectedMessage: string;
+    sessionId: string;
+    timestamp: string;
+}) {
+    const verifier = new Mock<VerifyFunction>();
+    const signature = "signature";
+    const { expectedMessage, timestamp, sessionId } = params;
+    verifier.setup(instance => instance(It.Is<VerifyFunctionParams>(params =>
+            params.signature === signature
+            && params.address === BOB
+            && params.message === expectedMessage
+        )
+    )).returns(Promise.resolve(true));
+    const service = new SignatureService(verifier.object());
+
+    const result = await service.verifyV2({
+        signature,
+        address: BOB,
+        timestamp ,
+        sessionId,
     })
 
     expect(result || false).toBe(params.expectedResult);
@@ -140,6 +181,26 @@ describe("PolkadotSignatureService", () => {
     it("fails to verify invalid signature", async () => {
         expect(await signatureService.verify({
             ...params,
+            signature: "0x8807227a68aecb8012994fa6197b36ffa50fe8510edb6ce3f78073deed022da05c272ec6f330f67b1fe6729eb3b66129daa506c18e8ab5eec96b8420711150b61c",
+        })).toBeFalse();
+    })
+
+    const paramsV2 = {
+        address: "5DPLBrBxniGbGdFe1Lmdpkt6K3aNjhoNPJrSJ51rwcmhH2Tn",
+        timestamp: "2022-07-21T15:42:36.653Z",
+        sessionId: "a0a9c8f5-743a-458e-8592-dd702bd9b58b",
+    }
+
+    it("verifies valid signature V2", async () => {
+        expect(await signatureService.verifyV2({
+            ...paramsV2,
+            signature: "0x6e8387fb70a5375b1986180f771bdc93de1c90a04dd88ff0ca190ed5c365e65289a79ae2240fcf4429759677ff410669e120eaf6430db039a63d2825cbe43f88",
+        })).toBeTrue();
+    })
+
+    it("fails to verify invalid signature V2", async () => {
+        expect(await signatureService.verifyV2({
+            ...paramsV2,
             signature: "0x8807227a68aecb8012994fa6197b36ffa50fe8510edb6ce3f78073deed022da05c272ec6f330f67b1fe6729eb3b66129daa506c18e8ab5eec96b8420711150b61c",
         })).toBeFalse();
     })

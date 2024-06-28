@@ -10,6 +10,7 @@ import {
     SignatureService,
     SignatureType,
     VerifyParams,
+    VerifyParamsV2,
     MultiversxSignatureService
 } from "../src/index.js";
 
@@ -102,8 +103,13 @@ async function testSignedSessionOrThrow(signatureType: SignatureType, address: s
         const signedSession = await sessionManager.signedSessionOrThrow(session, signatures);
         expect(signedSession.session).toBe(session);
         expect(signedSession.signatures).toBe(signatures);
+
+        const signedSessionV2 = await sessionManager.signedSessionOrThrowV2(session, signatures);
+        expect(signedSessionV2.session).toBe(session);
+        expect(signedSessionV2.signatures).toBe(signatures);
     } else {
         await expectAsync(sessionManager.signedSessionOrThrow(session, signatures)).toBeRejectedWithError(Error, "Invalid signature");
+        await expectAsync(sessionManager.signedSessionOrThrowV2(session, signatures)).toBeRejectedWithError(Error, "Invalid signature");
     }
 }
 
@@ -117,6 +123,12 @@ function match(args: VerifyParams, expected: ExpectedSignatureServiceVerify & { 
         && args.operation === "login"
         && args.resource === "authentication"
         && args.attributes[0] === expected.sessionId
+        && args.signature === expected.signature;
+}
+
+function matchV2(args: VerifyParamsV2, expected: ExpectedSignatureServiceVerify & { sessionId: string }): boolean {
+    return args.address === expected.address
+        && args.sessionId === expected.sessionId
         && args.signature === expected.signature;
 }
 
@@ -134,6 +146,8 @@ function buildSession(address: string, expectedSignatures: Record<SignatureType,
         };
         signatureServices.ETHEREUM.setup(instance => instance.verify(It.Is<VerifyParams>(args => match(args, expected)))).returnsAsync(true);
         signatureServices.ETHEREUM.setup(instance => instance.verify(It.Is<VerifyParams>(args => !match(args, expected)))).returnsAsync(false);
+        signatureServices.ETHEREUM.setup(instance => instance.verifyV2(It.Is<VerifyParamsV2>(args => matchV2(args, expected)))).returnsAsync(true);
+        signatureServices.ETHEREUM.setup(instance => instance.verifyV2(It.Is<VerifyParamsV2>(args => !matchV2(args, expected)))).returnsAsync(false);
     }
     if(expectedSignatures && expectedSignatures.POLKADOT) {
         const expected = {
@@ -142,6 +156,8 @@ function buildSession(address: string, expectedSignatures: Record<SignatureType,
         };
         signatureServices.POLKADOT.setup(instance => instance.verify(It.Is<VerifyParams>(args => match(args, expected)))).returnsAsync(true);
         signatureServices.POLKADOT.setup(instance => instance.verify(It.Is<VerifyParams>(args => !match(args, expected)))).returnsAsync(false);
+        signatureServices.POLKADOT.setup(instance => instance.verifyV2(It.Is<VerifyParamsV2>(args => matchV2(args, expected)))).returnsAsync(true);
+        signatureServices.POLKADOT.setup(instance => instance.verifyV2(It.Is<VerifyParamsV2>(args => !matchV2(args, expected)))).returnsAsync(false);
     }
     if(expectedSignatures && expectedSignatures.CROSSMINT_ETHEREUM) {
         const expected = {
@@ -150,6 +166,8 @@ function buildSession(address: string, expectedSignatures: Record<SignatureType,
         };
         signatureServices.CROSSMINT_ETHEREUM.setup(instance => instance.verify(It.Is<VerifyParams>(args => match(args, expected)))).returnsAsync(true);
         signatureServices.CROSSMINT_ETHEREUM.setup(instance => instance.verify(It.Is<VerifyParams>(args => !match(args, expected)))).returnsAsync(false);
+        signatureServices.CROSSMINT_ETHEREUM.setup(instance => instance.verifyV2(It.Is<VerifyParamsV2>(args => matchV2(args, expected)))).returnsAsync(true);
+        signatureServices.CROSSMINT_ETHEREUM.setup(instance => instance.verifyV2(It.Is<VerifyParamsV2>(args => !matchV2(args, expected)))).returnsAsync(false);
     }
     return { session, sessionManager };
 }

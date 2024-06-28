@@ -524,8 +524,8 @@ __metadata:
   dependencies:
     "@ethersproject/transactions": ^5.7.0
     "@istanbuljs/nyc-config-typescript": ^1.0.2
-    "@logion/client": ^0.45.0
-    "@logion/node-api": ^0.31.1
+    "@logion/client": ^0.46.1-2
+    "@logion/node-api": ^0.31.2
     "@multiversx/sdk-core": ^12.19.1
     "@multiversx/sdk-wallet": ^4.3.0
     "@tsconfig/node16": ^1.0.3
@@ -553,21 +553,21 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@logion/client@npm:^0.45.0":
-  version: 0.45.0
-  resolution: "@logion/client@npm:0.45.0"
+"@logion/client@npm:^0.46.1-2":
+  version: 0.46.1-2
+  resolution: "@logion/client@npm:0.46.1-2"
   dependencies:
-    "@logion/node-api": ^0.31.0
+    "@logion/node-api": ^0.31.2
     axios: ^1.6.7
     luxon: ^3.4.4
     mime-db: ^1.52.0
-  checksum: f38a1c240377696d0561270bed8bac074cefa01b67b2ad4fecd98ef6bb32839124a0e3d1ea3709db2c7d0115a3781dae3449b14a3f74229ec044afed6f0a867b
+  checksum: e8761a9d729e25999b0be243c3375447386f0e0fec6e035d47ba8cac77864aad2fe3834de58a3f93662c34cc0f4de2ce3d5e2e48fdd5edbe4f5151565b2addc0
   languageName: node
   linkType: hard
 
-"@logion/node-api@npm:^0.31.0":
-  version: 0.31.0
-  resolution: "@logion/node-api@npm:0.31.0"
+"@logion/node-api@npm:^0.31.2":
+  version: 0.31.2
+  resolution: "@logion/node-api@npm:0.31.2"
   dependencies:
     "@polkadot/api": ^11.0.2
     "@polkadot/util": ^12.6.2
@@ -576,22 +576,7 @@ __metadata:
     bech32: ^2.0.0
     fast-sha256: ^1.3.0
     uuid: ^9.0.0
-  checksum: 6aae4f45477cefcf253354ac26788a72e705d953f9e7a62f1fae2b92bb1ce9331bc850a967a5c5e1e3103dae448134ae2e1fc710a7408cebf88286b71b4a0ea2
-  languageName: node
-  linkType: hard
-
-"@logion/node-api@npm:^0.31.1":
-  version: 0.31.1
-  resolution: "@logion/node-api@npm:0.31.1"
-  dependencies:
-    "@polkadot/api": ^11.0.2
-    "@polkadot/util": ^12.6.2
-    "@polkadot/util-crypto": ^12.6.2
-    "@types/uuid": ^9.0.2
-    bech32: ^2.0.0
-    fast-sha256: ^1.3.0
-    uuid: ^9.0.0
-  checksum: cce34fb29bb4c3422536eb0529cb6fba3ba14a5b7a73888566cb4267ce8427b308693d3fb89c0fecfe6e7e52be74661ac6da1667b5a54bf96d6249f31034cced
+  checksum: 9d3d41d250db88e49e17da8c3a5dd65271ea54f9ee06c87ac465c344d0e2ec48a4de0c5975745f21d1b8684d682b858d893512eda7a7d1f6d1f81c2518101e2f
   languageName: node
   linkType: hard
 
