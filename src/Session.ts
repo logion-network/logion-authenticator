@@ -54,6 +54,24 @@ export class SessionManager {
         };
     }
 
+    async signedSessionOrThrowV2(session: Session, signatures: SessionSignature[]): Promise<SignedSession> {
+        for(const signature of signatures) {
+            const signatureService = this.config.signatureServices[signature.type];
+            if (!await signatureService.verifyV2({
+                address: signature.address,
+                signature: signature.signature,
+                timestamp: signature.signedOn,
+                sessionId: session.id,
+            })) {
+                throw this.config.errorFactory.unauthorized("Invalid signature");
+            }
+        }
+        return {
+            session,
+            signatures
+        };
+    }
+
     constructor(config: SessionManagerConfig) {
         this.config = config;
     }
